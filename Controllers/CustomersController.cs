@@ -50,7 +50,7 @@ namespace SimpleWebService.Controllers
             CustomerContext context = HttpContext.RequestServices.GetService(typeof(CustomerContext)) as CustomerContext;
             Customer customerFromDB = context.GetCustomer(id);
             if(customer.name == null || customer.surname == null)
-                return Json(new { status = "error", message = "Customer name/surname is missing" });
+                return BadRequest(Json(new { status = "error", message = "Customer name/surname is missing" }));
             
             if(customerFromDB == null)
                 return NotFound("Customer with ID " + id + " not found");
