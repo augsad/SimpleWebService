@@ -2,6 +2,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using SimpleWebService.Models;
+using SimpleWebService.Repository;
 
 namespace SimpleWebService.Controllers
 {
@@ -32,7 +33,8 @@ namespace SimpleWebService.Controllers
             CustomerContext context = HttpContext.RequestServices.GetService(typeof(CustomerContext)) as CustomerContext;
             try
             {
-                context.CreateCustomer(customer);
+               int createdId = context.CreateCustomer(customer);
+                customer.id = createdId;
             }
             catch(Exception ex)
             {

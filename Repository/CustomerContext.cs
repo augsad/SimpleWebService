@@ -1,10 +1,13 @@
 ﻿using MySql.Data.MySqlClient;
+using SimpleWebService.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SimpleWebService.Models
+namespace SimpleWebService.Repository
 {
     public class CustomerContext
     {
@@ -70,19 +73,21 @@ namespace SimpleWebService.Models
             }
             return customer;
         }
-        public void CreateCustomer(Customer customer)
+        public int CreateCustomer(Customer customer)
         {
+            int result;
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
                 try
                 {
-                    string query = "INSERT INTO customers(name,surname) VALUES(?name, ?surname)";
+                    string query = "INSERT INTO customers(name,surname) VALUES( ?name, ?surname)";
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
                         cmd.Parameters.Add("?name", MySqlDbType.VarChar).Value = customer.name ;
                         cmd.Parameters.Add("?surname", MySqlDbType.VarChar).Value = customer.surname;
                         cmd.ExecuteNonQuery();
+                        result = (int)cmd.LastInsertedId; ;
                     }
                 }
                 catch (MySqlException ex)
@@ -91,6 +96,7 @@ namespace SimpleWebService.Models
                 }
                 conn.Close();
             }
+            return result;
         }
         public bool DeleteCustomer(int id)
         {
@@ -115,7 +121,7 @@ namespace SimpleWebService.Models
                 string query = "UPDATE customers SET name = ?name, surname = ?surname WHERE id = ?id";
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.Add("?name", MySqlDbType.VarChar).Value = customer.name;
-                cmd.Parameters.Add("?surname", MySqlDbType.VarChar).Value = customer.name;
+                cmd.Parameters.Add("?surname", MySqlDbType.VarChar).Value = customer.surname;
                 cmd.Parameters.Add("?id", MySqlDbType.Int32).Value = id;
                 result = cmd.ExecuteNonQuery();
                 conn.Close();
