@@ -87,7 +87,7 @@ namespace SimpleWebService.Repository
                         cmd.Parameters.Add("?name", MySqlDbType.VarChar).Value = customer.name ;
                         cmd.Parameters.Add("?surname", MySqlDbType.VarChar).Value = customer.surname;
                         cmd.ExecuteNonQuery();
-                        result = (int)cmd.LastInsertedId; ;
+                        result = (int)cmd.LastInsertedId; 
                     }
                 }
                 catch (MySqlException ex)
